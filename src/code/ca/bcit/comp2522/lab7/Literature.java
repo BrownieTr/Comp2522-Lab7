@@ -1,4 +1,4 @@
-package ca.bcit.bookstore;
+package ca.bcit.comp2522.lab7;
 
 /**
  * A class representing a generic piece of literature.

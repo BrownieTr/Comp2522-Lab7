@@ -1,4 +1,4 @@
-package ca.bcit.bookstore;
+package ca.bcit.comp2522.lab7;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -9,11 +9,12 @@ import java.util.List;
  * The BookStore class manages a collection of literature, allowing various operations
  * such as sorting, filtering, and retrieving statistical information.
  *
- * @author Giorgio Donatelli
  * @author Brownie Tran
+ * @author Raymond Yang
+ * @author Andrew Hwang
  * @version 1.0
  */
-class BookStore<T extends Literature>
+class BookStore<T extends Literature> implements BookFilter
 {
     private static final int DEC_TO_PERCENT_FACTOR = 100;
     private static final int DECADE = 9;
@@ -40,14 +41,25 @@ class BookStore<T extends Literature>
         store.addItem(new Magazine("National Geographic", 2006));
 
         store.printItems();
+        store.items.sort((o1, o2) -> Integer.compare(o1.getTitle().length(), o2.getTitle().length()));
 
-        store.items.sort(new Comparator<>() {
-            @Override
-            public int compare(final Literature o1, final Literature o2) {
-                return Integer.compare(o1.getTitle().length(), o2.getTitle().length());
-            }
-        });
+//        store.printBooks(book -> book.getYearPublished() < 1950);
     }
+
+    @Override
+    public boolean filter(Book book)
+    {
+        return false;
+    }
+
+//    public void printBooks(final BookFilter filter)
+//    {
+//        for (Book book : books) {
+//            if (filter.filter(book)) {
+//                System.out.println(book);
+//            }
+//        }
+//    }
 
     /**
      * Class for handling info about the BookStore.
@@ -75,21 +87,16 @@ class BookStore<T extends Literature>
     {
         /**
          * Calculates the average length of all
-         * the literatu re titles in the store.
+         * the literature titles in the store.
          *
          * @return the average title length
          */
         double averageTitleLength()
         {
-            int totalLength;
+            int[] totalLength = {0};
 
-            totalLength = 0;
-
-            for(final T item : items)
-            {
-                totalLength += item.getTitle().length();
-            }
-            return (double) totalLength / items.size();
+            items.forEach(item -> totalLength[0] += item.getTitle().length());
+            return (double) totalLength[0] / items.size();
         }
     }
 
@@ -102,7 +109,6 @@ class BookStore<T extends Literature>
     BookStore(final String name)
     {
         validateString(name);
-
         this.name = name;
     }
 
@@ -135,10 +141,7 @@ class BookStore<T extends Literature>
      */
     private void printItems()
     {
-        for(final T item : items)
-        {
-            System.out.println(item.getTitle());
-        }
+        items.forEach(item -> System.out.println(item.getTitle()));
     }
 
     /*
@@ -146,10 +149,7 @@ class BookStore<T extends Literature>
      */
     private void printAllTitles()
     {
-        for(final T item : items)
-        {
-            System.out.println(item.getTitle().toUpperCase());
-        }
+        items.forEach( item -> System.out.println(item.getTitle().toUpperCase()));
     }
 
     /*
@@ -183,13 +183,11 @@ class BookStore<T extends Literature>
      */
     private void printGroupByDecade(final int decade)
     {
-        for(final T item : items)
-        {
-            if(item.getYearPublished() >= decade && item.getYearPublished() <= decade + DECADE)
-            {
+        items.forEach(item -> {
+            if(item.getYearPublished() >= decade && item.getYearPublished() <= decade + DECADE) {
                 System.out.println(item.getTitle());
             }
-        }
+        });
     }
 
     /*
@@ -197,18 +195,17 @@ class BookStore<T extends Literature>
      *
      * <p>If multiple novels share the same longest title length, the first encountered is printed.</p>
      */
-    private void getLongest()
-    {
+    private void getLongest() {
         T longestNovelTitle = items.getFirst();
-        for(final T item : items)
-        {
-            if(item.getTitle().length() > longestNovelTitle.getTitle().length())
-            {
+
+        for (final T item : items) {
+            if (Comparator.comparingInt((T item1) -> item1.getTitle().length()).compare(item, longestNovelTitle) > 0) {
                 longestNovelTitle = item;
             }
         }
         System.out.println(longestNovelTitle.getTitle());
     }
+
 
     /*
      * Determines whether there is any novel published in the specified year.

@@ -1,26 +1,26 @@
-package ca.bcit.bookstore;
+package ca.bcit.comp2522.lab7;
 
 /**
- * Represents a novel.
+ * Represents a comic book.
  *
  * @author Giorgio Donatelli
  * @author Brownie Tran
  * @version 1.0
  */
-class Novel extends Literature
+class ComicBook extends Literature
 {
     private final String title;
     private final int yearPublished;
 
     /**
-     * Constructs a new novel.
+     * Constructs a new comic book.
      *
-     * @param title the title of the novel
+     * @param title the title of the comic book
      * @param yearPublished the year the book was published
      * @throws IllegalArgumentException if the title is invalid
      */
-    Novel(final String title,
-          final int yearPublished)
+    ComicBook(final String title,
+              final int yearPublished)
     {
         validateString(title);
         validatePubYear(yearPublished);
@@ -30,9 +30,9 @@ class Novel extends Literature
     }
 
     /**
-     * Gets the title of the novel.
+     * Gets the title of the comic book.
      *
-     * @return the title of the novel
+     * @return the title of the comic book
      */
     @Override
     public String getTitle()

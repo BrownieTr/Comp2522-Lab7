@@ -1,26 +1,26 @@
-package ca.bcit.bookstore;
+package ca.bcit.comp2522.lab7;
 
 /**
- * Represents a magazine.
+ * Represents a novel.
  *
  * @author Giorgio Donatelli
  * @author Brownie Tran
  * @version 1.0
  */
-class Magazine extends Literature
+class Novel extends Literature
 {
     private final String title;
     private final int yearPublished;
 
     /**
-     * Constructs a new magazine.
+     * Constructs a new novel.
      *
-     * @param title the title of the magazine
+     * @param title the title of the novel
      * @param yearPublished the year the book was published
      * @throws IllegalArgumentException if the title is invalid
      */
-    Magazine(final String title,
-             final int yearPublished)
+    Novel(final String title,
+          final int yearPublished)
     {
         validateString(title);
         validatePubYear(yearPublished);
@@ -30,12 +30,13 @@ class Magazine extends Literature
     }
 
     /**
-     * Gets the title of the magazine.
+     * Gets the title of the novel.
      *
-     * @return the title of the magazine
+     * @return the title of the novel
      */
     @Override
-    public String getTitle() {
+    public String getTitle()
+    {
         return title;
     }
 
