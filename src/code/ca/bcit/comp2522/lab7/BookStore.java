@@ -3,6 +3,8 @@ package ca.bcit.comp2522.lab7;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * Represents a bookstore containing a collection of literature.
@@ -45,17 +47,16 @@ class BookStore<T extends Literature>
 
         store.printBooks(item -> item.getYearPublished()<1950);
 
+        Predicate<Literature> oldBooks = book -> book.getYearPublished() < 1950;
+        store.printBooks(oldBooks::test);
+
+        Supplier<Novel> bookSupplier = Novel::new;
+        Novel newBook = bookSupplier.get();
     }
 
-    public void printBooks(BookFilter filter)
+    public void printBooks(Predicate<T> filter)
     {
-        for(T item : items)
-        {
-            if(filter.filter(item))
-            {
-                System.out.println(item);
-            }
-        }
+        items.forEach(System.out::println);
     }
 
     /**
@@ -325,4 +326,6 @@ class BookStore<T extends Literature>
             }
         });
     }
+
+
 }
