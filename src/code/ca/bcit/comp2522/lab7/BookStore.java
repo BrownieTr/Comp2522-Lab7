@@ -41,7 +41,7 @@ class BookStore<T extends Literature> implements BookFilter
         store.addItem(new Magazine("National Geographic", 2006));
 
         store.printItems();
-        store.items.sort((o1, o2) -> Integer.compare(o1.getTitle().length(), o2.getTitle().length()));
+        store.items.sort(Comparator.comparingInt(o -> o.getTitle().length()));
 
 //        store.printBooks(book -> book.getYearPublished() < 1950);
     }
@@ -196,7 +196,7 @@ class BookStore<T extends Literature> implements BookFilter
      * <p>If multiple novels share the same longest title length, the first encountered is printed.</p>
      */
     private void getLongest() {
-        T longestNovelTitle = items.getFirst();
+        T longestNovelTitle = items.    getFirst();
 
         for (final T item : items) {
             if (Comparator.comparingInt((T item1) -> item1.getTitle().length()).compare(item, longestNovelTitle) > 0) {
