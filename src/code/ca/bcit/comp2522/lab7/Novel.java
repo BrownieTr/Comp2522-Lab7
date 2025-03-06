@@ -19,14 +19,19 @@ class Novel extends Literature
      * @param yearPublished the year the book was published
      * @throws IllegalArgumentException if the title is invalid
      */
-    Novel(final String title,
-          final int yearPublished)
+    public Novel(final String title,
+                 final int yearPublished)
     {
         validateString(title);
         validatePubYear(yearPublished);
 
         this.title = title;
         this.yearPublished = yearPublished;
+    }
+
+    public Novel() {
+        this.title = null;
+        this.yearPublished = 0;
     }
 
     /**
