@@ -95,6 +95,21 @@ class BookStore<T extends Literature>
             items.forEach((final T item) -> totalLength[0] += item.getTitle().length());
             return (double) totalLength[0] / items.size();
         }
+
+        public void sortByTitle()
+        {
+            items.sort(Comparator.comparing(T::getTitle));
+        }
+
+        public double getAverageTitleLength()
+        {
+            int totalLength = 0;
+            for(T item : items)
+            {
+                totalLength += item.getTitle().length();
+            }
+            return(items.size()>0) ? (double)totalLength/items.size() : 0;
+        }
     }
 
     /**
