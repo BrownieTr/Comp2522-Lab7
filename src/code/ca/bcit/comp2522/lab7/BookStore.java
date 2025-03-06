@@ -14,7 +14,7 @@ import java.util.List;
  * @author Andrew Hwang
  * @version 1.0
  */
-class BookStore<T extends Literature> implements BookFilter
+class BookStore<T extends Literature>
 {
     private static final int DEC_TO_PERCENT_FACTOR = 100;
     private static final int DECADE = 9;
@@ -41,25 +41,21 @@ class BookStore<T extends Literature> implements BookFilter
         store.addItem(new Magazine("National Geographic", 2006));
 
         store.printItems();
-        store.items.sort((o1, o2) -> Integer.compare(o1.getTitle().length(), o2.getTitle().length()));
 
-//        store.printBooks(book -> book.getYearPublished() < 1950);
+        store.printBooks(item -> item.getYearPublished()<1950);
+
     }
 
-    @Override
-    public boolean filter(Book book)
+    public void printBooks(BookFilter filter)
     {
-        return false;
+        for(T item : items)
+        {
+            if(filter.filter(item))
+            {
+                System.out.println(item);
+            }
+        }
     }
-
-//    public void printBooks(final BookFilter filter)
-//    {
-//        for (Book book : books) {
-//            if (filter.filter(book)) {
-//                System.out.println(book);
-//            }
-//        }
-//    }
 
     /**
      * Class for handling info about the BookStore.

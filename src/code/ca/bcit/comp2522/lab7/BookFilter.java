@@ -2,7 +2,8 @@ package ca.bcit.comp2522.lab7;
 
 
 @FunctionalInterface
-public interface BookFilter
+public interface BookFilter<T extends Literature>
 {
-    boolean filter(Book book);
+    boolean filter(final T book);
+
 }
