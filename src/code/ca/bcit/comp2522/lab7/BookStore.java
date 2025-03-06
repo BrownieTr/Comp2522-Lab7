@@ -95,7 +95,7 @@ class BookStore<T extends Literature> implements BookFilter
         {
             int[] totalLength = {0};
 
-            items.forEach(item -> totalLength[0] += item.getTitle().length());
+            items.forEach((final T item) -> totalLength[0] += item.getTitle().length());
             return (double) totalLength[0] / items.size();
         }
     }
@@ -141,7 +141,8 @@ class BookStore<T extends Literature> implements BookFilter
      */
     private void printItems()
     {
-        items.forEach(item -> System.out.println(item.getTitle()));
+        System.out.println("BooksStore: " + name);
+        items.forEach((final T item) -> System.out.println(item.getTitle() + ": in stock"));
     }
 
     /*
@@ -149,7 +150,7 @@ class BookStore<T extends Literature> implements BookFilter
      */
     private void printAllTitles()
     {
-        items.forEach( item -> System.out.println(item.getTitle().toUpperCase()));
+        items.forEach((final T item) -> System.out.println(item.getTitle().toUpperCase()));
     }
 
     /*
@@ -159,7 +160,7 @@ class BookStore<T extends Literature> implements BookFilter
      */
     private void printBookTitle(final String title)
     {
-        items.forEach(item -> {
+        items.forEach((final T item) -> {
             if(item.getTitle().toLowerCase().contains(title.toLowerCase()))
             {
                 System.out.println(item.getTitle());
@@ -173,7 +174,7 @@ class BookStore<T extends Literature> implements BookFilter
     private void printTitlesInAlphaOrder()
     {
         items.sort(Comparator.comparing(Literature::getTitle, String::compareToIgnoreCase));
-        items.forEach(item -> System.out.println(item.getTitle()));
+        items.forEach((final T item) -> System.out.println(item.getTitle()));
     }
 
     /*
@@ -183,7 +184,7 @@ class BookStore<T extends Literature> implements BookFilter
      */
     private void printGroupByDecade(final int decade)
     {
-        items.forEach(item -> {
+        items.forEach((final T item) -> {
             if(item.getYearPublished() >= decade && item.getYearPublished() <= decade + DECADE) {
                 System.out.println(item.getTitle());
             }
@@ -196,14 +197,16 @@ class BookStore<T extends Literature> implements BookFilter
      * <p>If multiple novels share the same longest title length, the first encountered is printed.</p>
      */
     private void getLongest() {
-        T longestNovelTitle = items.    getFirst();
 
-        for (final T item : items) {
-            if (Comparator.comparingInt((T item1) -> item1.getTitle().length()).compare(item, longestNovelTitle) > 0) {
-                longestNovelTitle = item;
+        List<T> longestNovelTitle = new ArrayList<T>();
+        longestNovelTitle.add(items.getFirst());
+
+        items.forEach((final T item) -> {
+            if (Comparator.comparingInt((T item1) -> item1.getTitle().length()).compare(item, longestNovelTitle.getFirst()) > 0) {
+                longestNovelTitle.set(0, item);
             }
-        }
-        System.out.println(longestNovelTitle.getTitle());
+        });
+        System.out.println(longestNovelTitle.getFirst().getTitle());
     }
 
 
@@ -215,14 +218,13 @@ class BookStore<T extends Literature> implements BookFilter
      */
     private boolean isThereABookWrittenIn(final int year)
     {
-        for(final T item : items)
-        {
-            if(item.getYearPublished() == year)
-            {
-                return true;
+        boolean[] result = {false};
+        items.forEach((final  T item) -> {
+            if (item.getYearPublished() == year) {
+                result[0] = true;
             }
-        }
-        return false;
+        });
+        return result[0];
     }
 
     /*
@@ -233,15 +235,15 @@ class BookStore<T extends Literature> implements BookFilter
      */
     private int howManyBooksContain(final String word)
     {
-        int booksContainingWord = NONE;
-        for(final T item : items)
-        {
-            if(item.getTitle().toLowerCase().contains(word.toLowerCase()))
-            {
-                booksContainingWord++;
+        int[] booksContainingWord = {NONE};
+
+        items.forEach((final T item) -> {
+            if(item.getTitle().toLowerCase().contains(word.toLowerCase())) {
+                booksContainingWord[0]++;
             }
-        }
-        return booksContainingWord;
+        });
+
+        return booksContainingWord[0];
     }
 
     /*
@@ -253,15 +255,14 @@ class BookStore<T extends Literature> implements BookFilter
      */
     private double whichPercentWrittenBetween(final int first, final int last)
     {
-        int booksBetweenYears = NONE;
-        for(final T item : items)
-        {
-            if(item.getYearPublished() >= first && item.getYearPublished() <= last)
-            {
-                booksBetweenYears++;
+        int[] booksBetweenYears = {NONE};
+
+        items.forEach((final T item) -> {
+            if (item.getYearPublished() >= first && item.getYearPublished() <= last) {
+                booksBetweenYears[0]++;
             }
-        }
-        return (booksBetweenYears / (double)(items.size())) * DEC_TO_PERCENT_FACTOR;
+        });
+        return (booksBetweenYears[0] / (double)(items.size())) * DEC_TO_PERCENT_FACTOR;
     }
 
     /*
@@ -271,15 +272,15 @@ class BookStore<T extends Literature> implements BookFilter
      */
     private T getOldestBook()
     {
-        T oldestBook = items.getFirst();
-        for(final T item : items)
-        {
-            if(item.getYearPublished() < oldestBook.getYearPublished())
-            {
-                oldestBook = item;
+        List<T> oldestBook = new ArrayList<T>();
+        oldestBook.add(items.getFirst());
+
+        items.forEach((final T item) -> {
+            if(item.getYearPublished() < oldestBook.getFirst().getYearPublished()) {
+                oldestBook.set(0, item);
             }
-        }
-        return oldestBook;
+        });
+        return oldestBook.getFirst();
     }
 
     /*
@@ -291,13 +292,11 @@ class BookStore<T extends Literature> implements BookFilter
     private ArrayList<T> getBooksThisLength(final int titleLength)
     {
         final ArrayList<T> booksThisLength = new ArrayList<>();
-        for(final T item : items)
-        {
-            if(item.getTitle().length() == titleLength)
-            {
+        items.forEach((final T item) -> {
+            if(item.getTitle().length() == titleLength) {
                 booksThisLength.add(item);
             }
-        }
+        });
         return booksThisLength;
     }
 
@@ -308,12 +307,10 @@ class BookStore<T extends Literature> implements BookFilter
      */
     private void addNovelsToCollection(final List<? super Novel> novelCollection)
     {
-        for (final T item : items)
-        {
-            if (item instanceof Novel)
-            {
+        items.forEach((final T item) -> {
+            if (item instanceof Novel) {
                 novelCollection.add((Novel) item);
             }
-        }
+        });
     }
 }
