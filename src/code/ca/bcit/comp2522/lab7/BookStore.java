@@ -47,7 +47,7 @@ class BookStore<T extends Literature> implements BookFilter
     }
 
     @Override
-    public boolean filter(Book book)
+    public boolean filter(Literature book)
     {
         return false;
     }
