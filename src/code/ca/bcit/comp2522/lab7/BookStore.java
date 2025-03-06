@@ -54,7 +54,7 @@ class BookStore<T extends Literature> implements BookFilter
 
 //    public void printBooks(final BookFilter filter)
 //    {
-//        for (Book book : books) {
+//        for (T bgitook : items) {
 //            if (filter.filter(book)) {
 //                System.out.println(book);
 //            }
