@@ -3,6 +3,8 @@ package ca.bcit.comp2522.lab7;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * Represents a bookstore containing a collection of literature.
@@ -14,7 +16,7 @@ import java.util.List;
  * @author Andrew Hwang
  * @version 1.0
  */
-class BookStore<T extends Literature> implements BookFilter
+class BookStore<T extends Literature>
 {
     private static final int DEC_TO_PERCENT_FACTOR = 100;
     private static final int DECADE = 9;
@@ -33,34 +35,52 @@ class BookStore<T extends Literature> implements BookFilter
     public static void main(final String[] args)
     {
         final BookStore<Literature> store;
-
         store = new BookStore<>("Bookland");
 
-        store.addItem(new Novel("War and Peace", 1984));
+
+        store.addItem(new Novel("War and Peace", 1869));
         store.addItem(new ComicBook("Spider-Man", 1990));
         store.addItem(new Magazine("National Geographic", 2006));
 
-        store.printItems();
-        store.items.sort(Comparator.comparingInt(o -> o.getTitle().length()));
+        // Sorting with lambda expression
+        store.items.sort(Comparator.comparing(Literature::getTitle));
 
-//        store.printBooks(book -> book.getYearPublished() < 1950);
+        // Print books published before 1950 using Predicate
+        Predicate<Literature> oldBooks = book -> book.getYearPublished() < 1950;
+        store.printBooks(oldBooks::test);
+        System.out.println();
+
+        // Print all book titles using method reference
+        store.items.forEach(System.out::println);
+        System.out.println();
+
+        // Constructor reference
+        Supplier<Novel> bookSupplier = () -> new Novel("New Novel", 2025);
+        Novel newBook = bookSupplier.get();
+        System.out.println("Created new book: " + newBook.getTitle());
+
+        // Using lambda expression inside forEach() for formatted output
+        store.items.forEach(book -> System.out.println("\uD83D\uDCD6 " + book.getTitle()));
+        System.out.println();
+
+        // Instantiate NovelStatistics using the store instance
+        BookStore<Literature>.NovelStatistics stats = store.new NovelStatistics();
+        System.out.println("Average Title Length: " + stats.getAverageTitleLength());
+        stats.sortByTitle();
     }
 
-    @Override
-    public boolean filter(Literature book)
-    {
-        return false;
+    /**
+     * Prints books that match the given filter condition.
+     *
+     * @param filter a predicate used to filter books
+     */
+    public void printBooks(Predicate<T> filter) {
+        items.forEach(book -> {
+            if (filter.test(book)) {
+                System.out.println(book);
+            }
+        });
     }
-
-//    public void printBooks(final BookFilter filter)
-//    {
-//        for (T bgitook : items) {
-//            if (filter.filter(book)) {
-//                System.out.println(book);
-//            }
-//        }
-//    }
-
     /**
      * Class for handling info about the BookStore.
      */
@@ -97,6 +117,29 @@ class BookStore<T extends Literature> implements BookFilter
 
             items.forEach((final T item) -> totalLength[0] += item.getTitle().length());
             return (double) totalLength[0] / items.size();
+        }
+
+        /**
+         * Sorts books by title.
+         */
+        public void sortByTitle()
+        {
+            items.sort(Comparator.comparing(T::getTitle));
+        }
+
+        /**
+         * Calculates the average title length of books.
+         *
+         * @return the average title length
+         */
+        public double getAverageTitleLength()
+        {
+            int totalLength = 0;
+            for(T item : items)
+            {
+                totalLength += item.getTitle().length();
+            }
+            return(items.size()>0) ? (double)totalLength/items.size() : 0;
         }
     }
 

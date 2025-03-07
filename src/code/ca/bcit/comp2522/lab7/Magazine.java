@@ -50,6 +50,12 @@ class Magazine extends Literature
         return yearPublished;
     }
 
+    @Override
+    public String toString()
+    {
+        return title;
+    }
+
     /*
      * Validates that the provided object is not null.
      *

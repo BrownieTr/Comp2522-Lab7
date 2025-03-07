@@ -78,4 +78,10 @@ class ComicBook extends Literature
             throw new IllegalArgumentException("Invalid year: " + year);
         }
     }
+
+    @Override
+    public String toString()
+    {
+        return title;
+    }
 }

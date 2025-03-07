@@ -24,4 +24,11 @@ abstract class Literature {
      * @return the year of publication
      */
     public abstract int getYearPublished();
+
+    /**
+     * Prints the title in String
+     *
+     * @return
+     */
+    public abstract String toString();
 }
