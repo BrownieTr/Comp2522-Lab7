@@ -55,7 +55,7 @@ class BookStore<T extends Literature>
         System.out.println();
 
         // Constructor reference
-        Supplier<Novel> bookSupplier = () -> new Novel("New Novel", 2025);
+        Supplier<Novel> bookSupplier = Novel::new;
         Novel newBook = bookSupplier.get();
         System.out.println("Created new book: " + newBook.getTitle());
 
@@ -74,13 +74,17 @@ class BookStore<T extends Literature>
      *
      * @param filter a predicate used to filter books
      */
-    public void printBooks(Predicate<T> filter) {
-        items.forEach(book -> {
-            if (filter.test(book)) {
-                System.out.println(book);
+    public void printBooks(BookFilter filter)
+    {
+        for(T item : items)
+        {
+            if(filter.filter(item))
+            {
+                System.out.println(item);
             }
-        });
+        }
     }
+
     /**
      * Class for handling info about the BookStore.
      */
@@ -134,12 +138,10 @@ class BookStore<T extends Literature>
          */
         public double getAverageTitleLength()
         {
-            int totalLength = 0;
-            for(T item : items)
-            {
-                totalLength += item.getTitle().length();
-            }
-            return(items.size()>0) ? (double)totalLength/items.size() : 0;
+            int[] totalLength = {0};
+
+            items.forEach((final T item) -> totalLength[0] += item.getTitle().length());
+            return(items.size()>0) ? (double)totalLength[0]/items.size() : 0;
         }
     }
 
